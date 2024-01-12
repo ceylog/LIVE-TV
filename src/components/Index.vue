@@ -3,18 +3,30 @@
     <v-app-bar>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       <v-app-bar-title>LIVE TV</v-app-bar-title>
+      <v-app-bar-title>{{ ct }}</v-app-bar-title>
       <v-btn icon="mdi-white-balance-auto" @click="toggleTheme"></v-btn>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer">
       <v-list>
-        <v-list-item v-for="b in sl" :key="b.name" @click="slist(b.url)" :title="b.name" :subtitle="b.url" />
+        <v-list-item
+          v-for="b in sl"
+          :key="b.name"
+          @click="slist(b.url)"
+          :title="b.name"
+          :subtitle="b.url"
+        />
         <v-divider></v-divider>
         <v-divider></v-divider>
         <v-divider></v-divider>
         <template v-for="(v, k) in cl.map" :key="k">
           <v-list-item :title="v[0]" />
           <v-divider />
-          <v-list-item v-for="c in v[1]" :key="c.name" :title="c.title" @click="switchch(c.url)"></v-list-item>
+          <v-list-item
+            v-for="c in v[1]"
+            :key="c.name"
+            :title="c.title"
+            @click="switchch(c.url, c.title)"
+          ></v-list-item>
         </template>
       </v-list>
     </v-navigation-drawer>
@@ -49,6 +61,8 @@ const cl = reactive({
   name: "3",
   map: null,
 });
+
+const ct = ref("CCTV-13");
 
 const options = reactive({
   autoplay: true,
@@ -115,9 +129,10 @@ const theme = useTheme();
 function toggleTheme() {
   theme.global.name.value = theme.global.current.value.dark ? "light" : "dark";
 }
-function switchch(url) {
+function switchch(url, title) {
   console.log(url);
   options.muted = false;
+  ct.value = title;
   options.sources = [{ src: url, type: "application/x-mpegURL" }];
 }
 </script>
